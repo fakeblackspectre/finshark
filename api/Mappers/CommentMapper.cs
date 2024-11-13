@@ -1,5 +1,6 @@
 ﻿using System;
 using api.DTOs.Comment;
+using api.DTOs.Stock;
 using api.Models;
 
 namespace api.Mappers;
@@ -18,13 +19,22 @@ public static class CommentMapper
     };
   }
 
-  public static Comment ToCommentFromCreate(this CreateCommentRequestDTO commentDTO, int stockId)
+  public static Comment ToCommentFromCreateDTO(this CreateCommentRequestDTO commentDTO, int stockId)
   {
     return new Comment
     {
       Title = commentDTO.Title,
       Content = commentDTO.Content,
       StockId = stockId
+    };
+  }
+
+  public static Comment ToCommentFromUpdateDTO(this UpdateCommentRequestDTO commentDTO)
+  {
+    return new Comment
+    {
+      Title = commentDTO.Title,
+      Content = commentDTO.Content,
     };
   }
 }
