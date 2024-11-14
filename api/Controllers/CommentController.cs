@@ -1,6 +1,7 @@
 ﻿using System;
 using api.DTOs.Comment;
 using api.Extensions;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -12,7 +13,6 @@ namespace api.Controllers;
 
 [Route("api/comment")]
 [ApiController]
-[Authorize]
 public class CommentController : ControllerBase
 {
   private readonly ICommentRepository _commentRepo;
@@ -29,12 +29,13 @@ public class CommentController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<IActionResult> GetAll()
+  [Authorize]
+  public async Task<IActionResult> GetAll([FromQuery] CommentQueryObject queryObject)
   {
     if (!ModelState.IsValid)
       return BadRequest(ModelState);
 
-    var comments = await _commentRepo.GetAllAsync();
+    var comments = await _commentRepo.GetAllAsync(queryObject);
     var commentDTO = comments.Select(s => s.ToCommentDTO());
     return Ok(commentDTO);
   }
@@ -51,6 +52,7 @@ public class CommentController : ControllerBase
   }
 
   [HttpPost("{symbol:alpha}")]
+  [Authorize]
   public async Task<IActionResult> Create([FromRoute] string symbol, [FromBody] CreateCommentRequestDTO commentDTO)
   {
     if (!ModelState.IsValid)
