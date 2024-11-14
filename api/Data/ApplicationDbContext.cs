@@ -28,6 +28,12 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
       .WithMany(u => u.Portfolios)
       .HasForeignKey(s => s.StockId);
 
+    builder.Entity<Comment>()
+          .HasOne(c => c.Stock)
+          .WithMany(s => s.Comments)
+          .HasForeignKey(c => c.StockId)
+          .OnDelete(DeleteBehavior.Cascade);
+
     List<IdentityRole> roles = new List<IdentityRole>
     {
       new IdentityRole
